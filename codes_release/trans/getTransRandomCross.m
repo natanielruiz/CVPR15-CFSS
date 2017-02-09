@@ -19,7 +19,7 @@ while ~isempty(I)
     pr(I) = randi(m,length(I),1);
     I = find(pr-[1:m]'==0);
 end
-if (m<100) || (matlabpool('size')==0)
+if (false)
     T = arrayfun(@(i)cp2tform(reshape(pose(i,:),n,2),reshape(pose(pr(i),:),n,2),'nonreflective similarity'),1:m);
     if m>=100
         warning('Please launch matlabpool to speed up your program!');

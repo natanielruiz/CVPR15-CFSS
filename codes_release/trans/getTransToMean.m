@@ -14,7 +14,7 @@ if mod(n,2),error('size(pose,2) is odd!');end
 n = n / 2;
 m = size(pose,1);
 meanPose = reshape(mean(pose,1),n,2);
-if (m<100) || (matlabpool('size')==0)
+if (false)
     T = arrayfun(@(i)cp2tform(reshape(pose(i,:),n,2),meanPose,'nonreflective similarity'),1:m);
     if m>=100
         warning('Please launch matlabpool to speed up your program!');

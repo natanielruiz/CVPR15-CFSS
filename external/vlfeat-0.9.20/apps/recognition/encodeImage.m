@@ -56,7 +56,7 @@ descrs = cat(2,descrs{:}) ;
 function psi = processChunk(encoder, im)
 % --------------------------------------------------------------------
 psi = cell(1,numel(im)) ;
-if numel(im) > 1 & matlabpool('size') > 1
+if numel(im) > 1 & isempty(gcp('nocreate')) > 1
   parfor i = 1:numel(im)
     psi{i} = encodeOne(encoder, im{i}) ;
   end
