@@ -14,7 +14,7 @@ feat = zeros(n,128*n_pts);
 
 if isempty(currentPose), return; end;
 
-if (length(images)<100) || (matlabpool('size')==0)
+if (false)
     for i = 1:length(images)
         pts = reshape(currentPose(i,:),n_pts,2);
         descriptor = extractSIFT_toosimple( single( images{i} ), pts ,scale);

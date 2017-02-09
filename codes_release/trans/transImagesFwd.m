@@ -9,7 +9,7 @@ function newImages = transImagesFwd(oldImages,T,rows,cols)
 m = length(oldImages);
 if m~=length(T),error('size(oldImages,1) must equal to length(T)!');end;
 
-if (m<100) || (matlabpool('size')==0)
+if (false)
     newImages = arrayfun(@(i)imtransform(oldImages{i},T(i),'XData',...
         [1 cols],'YData',[1 rows]),1:m,'UniformOutput',false);
     if (m>=100)

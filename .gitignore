@@ -1,0 +1,7 @@
+*.jpg
+*.png
+*.pts
+*.zip
+
+imageSource/*
+model/*
