@@ -2,31 +2,62 @@
 % Any question please contact Shizhan Zhu: zhshzhutah2@gmail.com
 % Released on July 25, 2015
 
+% Grab bboxes and frame numbers
+
 clear;
 
-% Grab image names and bounding boxes
-file_id = fopen('data/test_csv_name_bbox.csv');
-filename_bboxes = textscan(file_id, '%s%f%f%f%f', 'delimiter', ',');
+file_id = fopen('data/bbox_annotations/SWC024_childface_5000frames.txt');
+frames_bboxes = textscan(file_id, '%s%f%f%f%f%*[^\n]', 'delimiter', ' ');
 fclose(file_id);
-nameList_temp = filename_bboxes(:,1);
-nameList = nameList_temp{1,1};
-bbox_temp = filename_bboxes(:,2:end);
-bbox = [bbox_temp{1,1} bbox_temp{1,2} bbox_temp{1,3} bbox_temp{1,4}];
+nameList_temp = frames_bboxes(:,1);
+nameList_temp = nameList_temp{1,1};
+bbox_temp = frames_bboxes(:,2:end);
 
+% Save images from video to file
+video_filename = 'data/videos/SWC024_2016_06_27_pivothead_AVI.avi';
+video = VideoReader(video_filename);
+
+'test0'
+already_exist = true;
+
+n_frames = 5000;
+if ~already_exist
+    for i=1:n_frames
+      frame=readFrame(video);
+      thisfile=sprintf('output/tmp/%d.jpg',i);
+      imwrite(frame,thisfile);
+    end
+    'test1'
+end
+
+% Modify namelist to have .jpg
+% TODO this is really slow..
+if exist('nameList') ~= 1
+    nameList = {};
+    for i=1:length(nameList_temp)
+        nameList{i,1} = [nameList_temp{i} '.jpg'];
+    end
+end
+
+'test2'
 % Set image root and load models
-img_root = './imageSource/';
+img_root = './output/tmp/';
 load ./model/mean_simple_face.mat mean_simple_face;
 load ./model/target_simple_face.mat target_simple_face;
 load ./model/CFSS_Model_0.mat priorModel testConf model;
+
+% This code is for OMRON bbox annotations
+% Which are square and the format is NA, x1, y1, x2
+x1 = bbox_temp{1,2};
+y1 = bbox_temp{1,1};
+x2 = bbox_temp{1,4};
+y2 = bbox_temp{1,3};
+bbox = [y1 y2 x1 x2];
 
 m = length(nameList);
 mt = size(model{1}.tpt,1);
 T = cell(1,testConf.stageTot);
 images = cell(m,1);
-
-img_root
-nameList{1}
-[img_root nameList{1}]
 
 for level = 1:testConf.stageTot
     % 61. Re-trans
